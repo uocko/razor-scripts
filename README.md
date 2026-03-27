@@ -8,6 +8,8 @@
 ```
 > ⚒  Oficiální skripty pro Razor Community Edition  ⚒
 
+**[UOčko.cz](https://uocko.cz/)** — český Ultima Online server
+
 ---
 
 ## Co je to za repozitář?
