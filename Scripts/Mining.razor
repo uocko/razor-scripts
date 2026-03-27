@@ -4,7 +4,7 @@
 #  ██║   ██║ ██║   ██║ ██║      ██╔═██╗ ██║   ██║
 #  ╚██████╔╝ ╚██████╔╝ ╚██████╗ ██║  ██╗╚██████╔╝
 #   ╚═════╝   ╚═════╝   ╚═════╝ ╚═╝  ╚═╝ ╚═════╝  .cz
-#  ⚒  Oficialni skripty pro Razor Community Edition  ⚒
+#  ⚒ Oficialni skripty pro Razor Community Edition ⚒
 #  https://github.com/uocko/razor-scripts
 #
 # =============================================
@@ -122,9 +122,24 @@ while not dead
             targetrelloc 0 -2
         endif
     endif
-    while not insysmsg 'no metal' and not insysmsg 'There is no metal' and not insysmsg 'no more ore' and not insysmsg 'worn out' and not dead
+    while not insysmsg 'no metal' and not insysmsg 'There is no metal' and not insysmsg 'no more ore' and not insysmsg 'worn out' and not insysmsg 'too far' and not dead
         wait 500
     endwhile
+    if insysmsg 'too far'
+        overhead '[RETRY] Too far, zkusim znovu...' 33
+        wait 1000
+        clearsysmsg
+        if findtype 'shovel' backpack as 'shov'
+            dclick 'shov'
+            wft 5000
+        else
+            dclick 'right'
+            wft 5000
+        endif
+        while not insysmsg 'no metal' and not insysmsg 'There is no metal' and not insysmsg 'no more ore' and not insysmsg 'worn out' and not dead
+            wait 500
+        endwhile
+    endif
     clearsysmsg
     cleardragdrop
 
@@ -211,9 +226,24 @@ while not dead
             targetrelloc 0 -1
         endif
     endif
-    while not insysmsg 'no metal' and not insysmsg 'There is no metal' and not insysmsg 'no more ore' and not insysmsg 'worn out' and not dead
+    while not insysmsg 'no metal' and not insysmsg 'There is no metal' and not insysmsg 'no more ore' and not insysmsg 'worn out' and not insysmsg 'too far' and not dead
         wait 500
     endwhile
+    if insysmsg 'too far'
+        overhead '[RETRY] Too far, zkusim znovu...' 33
+        wait 1000
+        clearsysmsg
+        if findtype 'shovel' backpack as 'shov'
+            dclick 'shov'
+            wft 5000
+        else
+            dclick 'right'
+            wft 5000
+        endif
+        while not insysmsg 'no metal' and not insysmsg 'There is no metal' and not insysmsg 'no more ore' and not insysmsg 'worn out' and not dead
+            wait 500
+        endwhile
+    endif
     clearsysmsg
     cleardragdrop
 
@@ -238,9 +268,24 @@ while not dead
         wft 5000
         targetrelloc 0 0
     endif
-    while not insysmsg 'no metal' and not insysmsg 'There is no metal' and not insysmsg 'no more ore' and not insysmsg 'worn out' and not dead
+    while not insysmsg 'no metal' and not insysmsg 'There is no metal' and not insysmsg 'no more ore' and not insysmsg 'worn out' and not insysmsg 'too far' and not dead
         wait 500
     endwhile
+    if insysmsg 'too far'
+        overhead '[RETRY] Too far, zkusim znovu...' 33
+        wait 1000
+        clearsysmsg
+        if findtype 'shovel' backpack as 'shov'
+            dclick 'shov'
+            wft 5000
+        else
+            dclick 'right'
+            wft 5000
+        endif
+        while not insysmsg 'no metal' and not insysmsg 'There is no metal' and not insysmsg 'no more ore' and not insysmsg 'worn out' and not dead
+            wait 500
+        endwhile
+    endif
     clearsysmsg
     cleardragdrop
 
@@ -327,9 +372,24 @@ while not dead
             targetrelloc 0 1
         endif
     endif
-    while not insysmsg 'no metal' and not insysmsg 'There is no metal' and not insysmsg 'no more ore' and not insysmsg 'worn out' and not dead
+    while not insysmsg 'no metal' and not insysmsg 'There is no metal' and not insysmsg 'no more ore' and not insysmsg 'worn out' and not insysmsg 'too far' and not dead
         wait 500
     endwhile
+    if insysmsg 'too far'
+        overhead '[RETRY] Too far, zkusim znovu...' 33
+        wait 1000
+        clearsysmsg
+        if findtype 'shovel' backpack as 'shov'
+            dclick 'shov'
+            wft 5000
+        else
+            dclick 'right'
+            wft 5000
+        endif
+        while not insysmsg 'no metal' and not insysmsg 'There is no metal' and not insysmsg 'no more ore' and not insysmsg 'worn out' and not dead
+            wait 500
+        endwhile
+    endif
     clearsysmsg
     cleardragdrop
 
@@ -416,9 +476,24 @@ while not dead
             targetrelloc 0 2
         endif
     endif
-    while not insysmsg 'no metal' and not insysmsg 'There is no metal' and not insysmsg 'no more ore' and not insysmsg 'worn out' and not dead
+    while not insysmsg 'no metal' and not insysmsg 'There is no metal' and not insysmsg 'no more ore' and not insysmsg 'worn out' and not insysmsg 'too far' and not dead
         wait 500
     endwhile
+    if insysmsg 'too far'
+        overhead '[RETRY] Too far, zkusim znovu...' 33
+        wait 1000
+        clearsysmsg
+        if findtype 'shovel' backpack as 'shov'
+            dclick 'shov'
+            wft 5000
+        else
+            dclick 'right'
+            wft 5000
+        endif
+        while not insysmsg 'no metal' and not insysmsg 'There is no metal' and not insysmsg 'no more ore' and not insysmsg 'worn out' and not dead
+            wait 500
+        endwhile
+    endif
     clearsysmsg
     cleardragdrop
 
