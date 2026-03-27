@@ -6,6 +6,3 @@
 !Scripts/**
 !*.md
 !.gitignore
-
-# Lokalni reference - nepatri do repa
-RazorEnhanced_Scripting_Reference.md
