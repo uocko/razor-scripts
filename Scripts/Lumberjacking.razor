@@ -38,13 +38,21 @@ createtimer 'chopTimer'
 while not dead
 
     # === MONSTER CHECK ===
-    # Zkontroluj nepratele v dosahu 8 tiles pred kazdym krokem
     # POZNAMKA: syntax findtype pro mobily nutno overit na serveru
-    if findtype 'mobile' ground 8 as 'enemy'
+    # Varovani: nepritel na obrazovce (9-18 tiles), ale jeste bezpecno
+    if findtype 'mobile' ground 18 as 'enemy'
         if not friend 'enemy'
-            overhead '[DANGER] Nepritel v dosahu, cekam...' 33
+            if not findtype 'mobile' ground 9 as 'enemy'
+                overhead '[WARN] Nepritel na obrazovce, ale daleko' 48
+            endif
+        endif
+    endif
+    # Nebezpeci: nepritel do 9 tiles - zastav a cekej
+    if findtype 'mobile' ground 9 as 'enemy'
+        if not friend 'enemy'
+            overhead '[DANGER] Nepritel blizko, cekam...' 33
             sound 523
-            while findtype 'mobile' ground 8 as 'enemy' and not friend 'enemy' and not dead
+            while findtype 'mobile' ground 9 as 'enemy' and not friend 'enemy' and not dead
                 wait 1000
             endwhile
         endif
