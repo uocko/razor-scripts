@@ -6,7 +6,7 @@
  ╚██████╔╝ ╚██████╔╝ ╚██████╗ ██║  ██╗╚██████╔╝
   ╚═════╝   ╚═════╝   ╚═════╝ ╚═╝  ╚═╝ ╚═════╝  .cz
 ```
-> ⚒  Oficiální skripty pro Razor Community Edition  ⚒
+> ⚒ Oficiální skripty pro Razor Community Edition ⚒
 
 **[UOčko.cz](https://uocko.cz/)** — český Ultima Online server
 
