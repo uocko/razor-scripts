@@ -8,7 +8,7 @@
 #  https://github.com/uocko/razor-scripts
 #
 # =============================================
-# MINING SKRIPT - Razor CE v7
+# MINING SKRIPT - Razor CE v8
 # =============================================
 # 1) Kope 5 policek (center + 2 na kazde strane kolmo na smer)
 # 2) Haze ore z batohu na zem pred sebe
@@ -36,100 +36,94 @@ createtimer 'digTimer'
 
 while not dead
 
+    # === WEIGHT CHECK: vysyp ore a pokracuj ===
+    if weight >= maxweight - 20
+        overhead '[WEIGHT] Prilis tezky, vysypavam...' 33
+        while findtype '6583' backpack as 'bpore'
+            lift 'bpore' 60000
+            if inlist 'smer' 'N'
+                droprelloc 0 -1
+            elseif inlist 'smer' 'S'
+                droprelloc 0 1
+            elseif inlist 'smer' 'E'
+                droprelloc 1 0
+            elseif inlist 'smer' 'W'
+                droprelloc -1 0
+            endif
+            wait 200
+        endwhile
+        while findtype '6584' backpack as 'bpore'
+            lift 'bpore' 60000
+            if inlist 'smer' 'N'
+                droprelloc 0 -1
+            elseif inlist 'smer' 'S'
+                droprelloc 0 1
+            elseif inlist 'smer' 'E'
+                droprelloc 1 0
+            elseif inlist 'smer' 'W'
+                droprelloc -1 0
+            endif
+            wait 200
+        endwhile
+        while findtype '6585' backpack as 'bpore'
+            lift 'bpore' 60000
+            if inlist 'smer' 'N'
+                droprelloc 0 -1
+            elseif inlist 'smer' 'S'
+                droprelloc 0 1
+            elseif inlist 'smer' 'E'
+                droprelloc 1 0
+            elseif inlist 'smer' 'W'
+                droprelloc -1 0
+            endif
+            wait 200
+        endwhile
+        while findtype '6586' backpack as 'bpore'
+            lift 'bpore' 60000
+            if inlist 'smer' 'N'
+                droprelloc 0 -1
+            elseif inlist 'smer' 'S'
+                droprelloc 0 1
+            elseif inlist 'smer' 'E'
+                droprelloc 1 0
+            elseif inlist 'smer' 'W'
+                droprelloc -1 0
+            endif
+            wait 200
+        endwhile
+    endif
+
     # === 1) KOPE 5 POLICEK ===
     # N/S: sweep E-W  (x: -2,-1,0,1,2 / y: 0)
     # E/W: sweep N-S  (x: 0 / y: -2,-1,0,1,2)
 
+    # Nastroj: zkontroluj/vybav jednou pred vsemi digy
+    if not findtype 'shovel' backpack
+        if rhandempty
+            if findtype 'pickaxe' backpack as 'pick'
+                overhead '[EQUIP] Pickaxe' 67
+                dress 'pick'
+                wait 1000
+            else
+                overhead '[ERR] Nemas nastroj!' 33
+                stop
+            endif
+        endif
+    endif
+
     # --- Kop 1/5 ---
     overhead '[DIG 1/5]' 67
-    if inlist 'smer' 'N'
-        if findtype 'shovel' backpack as 'shov'
-            dclick 'shov'
-            wft 5000
-            wait 200
-            targetrelloc -2 0
-        else
-            if rhandempty
-                if findtype 'pickaxe' backpack as 'pick'
-                    overhead '[EQUIP] Pickaxe' 67
-                    dress 'pick'
-                    wait 1000
-                else
-                    overhead '[ERR] Nemas nastroj!' 33
-                    stop
-                endif
-            endif
-            dclick 'right'
-            wft 5000
-            wait 200
-            targetrelloc -2 0
-        endif
-    elseif inlist 'smer' 'S'
-        if findtype 'shovel' backpack as 'shov'
-            dclick 'shov'
-            wft 5000
-            wait 200
-            targetrelloc -2 0
-        else
-            if rhandempty
-                if findtype 'pickaxe' backpack as 'pick'
-                    overhead '[EQUIP] Pickaxe' 67
-                    dress 'pick'
-                    wait 1000
-                else
-                    overhead '[ERR] Nemas nastroj!' 33
-                    stop
-                endif
-            endif
-            dclick 'right'
-            wft 5000
-            wait 200
-            targetrelloc -2 0
-        endif
-    elseif inlist 'smer' 'E'
-        if findtype 'shovel' backpack as 'shov'
-            dclick 'shov'
-            wft 5000
-            wait 200
-            targetrelloc 0 -2
-        else
-            if rhandempty
-                if findtype 'pickaxe' backpack as 'pick'
-                    overhead '[EQUIP] Pickaxe' 67
-                    dress 'pick'
-                    wait 1000
-                else
-                    overhead '[ERR] Nemas nastroj!' 33
-                    stop
-                endif
-            endif
-            dclick 'right'
-            wft 5000
-            wait 200
-            targetrelloc 0 -2
-        endif
-    elseif inlist 'smer' 'W'
-        if findtype 'shovel' backpack as 'shov'
-            dclick 'shov'
-            wft 5000
-            wait 200
-            targetrelloc 0 -2
-        else
-            if rhandempty
-                if findtype 'pickaxe' backpack as 'pick'
-                    overhead '[EQUIP] Pickaxe' 67
-                    dress 'pick'
-                    wait 1000
-                else
-                    overhead '[ERR] Nemas nastroj!' 33
-                    stop
-                endif
-            endif
-            dclick 'right'
-            wft 5000
-            wait 200
-            targetrelloc 0 -2
-        endif
+    if findtype 'shovel' backpack as 'shov'
+        dclick 'shov'
+    else
+        dclick 'right'
+    endif
+    wft 5000
+    wait 200
+    if inlist 'smer' 'N' or inlist 'smer' 'S'
+        targetrelloc -2 0
+    else
+        targetrelloc 0 -2
     endif
     settimer 'digTimer' 0
     while timer 'digTimer' < 3000 and not insysmsg 'no metal' and not insysmsg 'There is no metal' and not insysmsg 'no more ore' and not insysmsg 'worn out' and not insysmsg 'too far' and not dead
@@ -143,94 +137,17 @@ while not dead
 
     # --- Kop 2/5 ---
     overhead '[DIG 2/5]' 67
-    if inlist 'smer' 'N'
-        if findtype 'shovel' backpack as 'shov'
-            dclick 'shov'
-            wft 5000
-            wait 200
-            targetrelloc -1 0
-        else
-            if rhandempty
-                if findtype 'pickaxe' backpack as 'pick'
-                    overhead '[EQUIP] Pickaxe' 67
-                    dress 'pick'
-                    wait 1000
-                else
-                    overhead '[ERR] Nemas nastroj!' 33
-                    stop
-                endif
-            endif
-            dclick 'right'
-            wft 5000
-            wait 200
-            targetrelloc -1 0
-        endif
-    elseif inlist 'smer' 'S'
-        if findtype 'shovel' backpack as 'shov'
-            dclick 'shov'
-            wft 5000
-            wait 200
-            targetrelloc -1 0
-        else
-            if rhandempty
-                if findtype 'pickaxe' backpack as 'pick'
-                    overhead '[EQUIP] Pickaxe' 67
-                    dress 'pick'
-                    wait 1000
-                else
-                    overhead '[ERR] Nemas nastroj!' 33
-                    stop
-                endif
-            endif
-            dclick 'right'
-            wft 5000
-            wait 200
-            targetrelloc -1 0
-        endif
-    elseif inlist 'smer' 'E'
-        if findtype 'shovel' backpack as 'shov'
-            dclick 'shov'
-            wft 5000
-            wait 200
-            targetrelloc 0 -1
-        else
-            if rhandempty
-                if findtype 'pickaxe' backpack as 'pick'
-                    overhead '[EQUIP] Pickaxe' 67
-                    dress 'pick'
-                    wait 1000
-                else
-                    overhead '[ERR] Nemas nastroj!' 33
-                    stop
-                endif
-            endif
-            dclick 'right'
-            wft 5000
-            wait 200
-            targetrelloc 0 -1
-        endif
-    elseif inlist 'smer' 'W'
-        if findtype 'shovel' backpack as 'shov'
-            dclick 'shov'
-            wft 5000
-            wait 200
-            targetrelloc 0 -1
-        else
-            if rhandempty
-                if findtype 'pickaxe' backpack as 'pick'
-                    overhead '[EQUIP] Pickaxe' 67
-                    dress 'pick'
-                    wait 1000
-                else
-                    overhead '[ERR] Nemas nastroj!' 33
-                    stop
-                endif
-            endif
-            dclick 'right'
-            wft 5000
-            wait 200
-            targetrelloc 0 -1
-        endif
+    if findtype 'shovel' backpack as 'shov'
+        dclick 'shov'
+    else
+        dclick 'right'
+    endif
+    wft 5000
+    wait 200
+    if inlist 'smer' 'N' or inlist 'smer' 'S'
+        targetrelloc -1 0
+    else
+        targetrelloc 0 -1
     endif
     settimer 'digTimer' 0
     while timer 'digTimer' < 3000 and not insysmsg 'no metal' and not insysmsg 'There is no metal' and not insysmsg 'no more ore' and not insysmsg 'worn out' and not insysmsg 'too far' and not dead
@@ -246,25 +163,12 @@ while not dead
     overhead '[DIG 3/5]' 67
     if findtype 'shovel' backpack as 'shov'
         dclick 'shov'
-        wft 5000
-        wait 200
-        targetrelloc 0 0
     else
-        if rhandempty
-            if findtype 'pickaxe' backpack as 'pick'
-                overhead '[EQUIP] Pickaxe' 67
-                dress 'pick'
-                wait 1000
-            else
-                overhead '[ERR] Nemas nastroj!' 33
-                stop
-            endif
-        endif
         dclick 'right'
-        wft 5000
-        wait 200
-        targetrelloc 0 0
     endif
+    wft 5000
+    wait 200
+    targetrelloc 0 0
     settimer 'digTimer' 0
     while timer 'digTimer' < 3000 and not insysmsg 'no metal' and not insysmsg 'There is no metal' and not insysmsg 'no more ore' and not insysmsg 'worn out' and not insysmsg 'too far' and not dead
         if insysmsg 'loosen' or insysmsg 'You dig'
@@ -277,94 +181,17 @@ while not dead
 
     # --- Kop 4/5 ---
     overhead '[DIG 4/5]' 67
-    if inlist 'smer' 'N'
-        if findtype 'shovel' backpack as 'shov'
-            dclick 'shov'
-            wft 5000
-            wait 200
-            targetrelloc 1 0
-        else
-            if rhandempty
-                if findtype 'pickaxe' backpack as 'pick'
-                    overhead '[EQUIP] Pickaxe' 67
-                    dress 'pick'
-                    wait 1000
-                else
-                    overhead '[ERR] Nemas nastroj!' 33
-                    stop
-                endif
-            endif
-            dclick 'right'
-            wft 5000
-            wait 200
-            targetrelloc 1 0
-        endif
-    elseif inlist 'smer' 'S'
-        if findtype 'shovel' backpack as 'shov'
-            dclick 'shov'
-            wft 5000
-            wait 200
-            targetrelloc 1 0
-        else
-            if rhandempty
-                if findtype 'pickaxe' backpack as 'pick'
-                    overhead '[EQUIP] Pickaxe' 67
-                    dress 'pick'
-                    wait 1000
-                else
-                    overhead '[ERR] Nemas nastroj!' 33
-                    stop
-                endif
-            endif
-            dclick 'right'
-            wft 5000
-            wait 200
-            targetrelloc 1 0
-        endif
-    elseif inlist 'smer' 'E'
-        if findtype 'shovel' backpack as 'shov'
-            dclick 'shov'
-            wft 5000
-            wait 200
-            targetrelloc 0 1
-        else
-            if rhandempty
-                if findtype 'pickaxe' backpack as 'pick'
-                    overhead '[EQUIP] Pickaxe' 67
-                    dress 'pick'
-                    wait 1000
-                else
-                    overhead '[ERR] Nemas nastroj!' 33
-                    stop
-                endif
-            endif
-            dclick 'right'
-            wft 5000
-            wait 200
-            targetrelloc 0 1
-        endif
-    elseif inlist 'smer' 'W'
-        if findtype 'shovel' backpack as 'shov'
-            dclick 'shov'
-            wft 5000
-            wait 200
-            targetrelloc 0 1
-        else
-            if rhandempty
-                if findtype 'pickaxe' backpack as 'pick'
-                    overhead '[EQUIP] Pickaxe' 67
-                    dress 'pick'
-                    wait 1000
-                else
-                    overhead '[ERR] Nemas nastroj!' 33
-                    stop
-                endif
-            endif
-            dclick 'right'
-            wft 5000
-            wait 200
-            targetrelloc 0 1
-        endif
+    if findtype 'shovel' backpack as 'shov'
+        dclick 'shov'
+    else
+        dclick 'right'
+    endif
+    wft 5000
+    wait 200
+    if inlist 'smer' 'N' or inlist 'smer' 'S'
+        targetrelloc 1 0
+    else
+        targetrelloc 0 1
     endif
     settimer 'digTimer' 0
     while timer 'digTimer' < 3000 and not insysmsg 'no metal' and not insysmsg 'There is no metal' and not insysmsg 'no more ore' and not insysmsg 'worn out' and not insysmsg 'too far' and not dead
@@ -378,94 +205,17 @@ while not dead
 
     # --- Kop 5/5 ---
     overhead '[DIG 5/5]' 67
-    if inlist 'smer' 'N'
-        if findtype 'shovel' backpack as 'shov'
-            dclick 'shov'
-            wft 5000
-            wait 200
-            targetrelloc 2 0
-        else
-            if rhandempty
-                if findtype 'pickaxe' backpack as 'pick'
-                    overhead '[EQUIP] Pickaxe' 67
-                    dress 'pick'
-                    wait 1000
-                else
-                    overhead '[ERR] Nemas nastroj!' 33
-                    stop
-                endif
-            endif
-            dclick 'right'
-            wft 5000
-            wait 200
-            targetrelloc 2 0
-        endif
-    elseif inlist 'smer' 'S'
-        if findtype 'shovel' backpack as 'shov'
-            dclick 'shov'
-            wft 5000
-            wait 200
-            targetrelloc 2 0
-        else
-            if rhandempty
-                if findtype 'pickaxe' backpack as 'pick'
-                    overhead '[EQUIP] Pickaxe' 67
-                    dress 'pick'
-                    wait 1000
-                else
-                    overhead '[ERR] Nemas nastroj!' 33
-                    stop
-                endif
-            endif
-            dclick 'right'
-            wft 5000
-            wait 200
-            targetrelloc 2 0
-        endif
-    elseif inlist 'smer' 'E'
-        if findtype 'shovel' backpack as 'shov'
-            dclick 'shov'
-            wft 5000
-            wait 200
-            targetrelloc 0 2
-        else
-            if rhandempty
-                if findtype 'pickaxe' backpack as 'pick'
-                    overhead '[EQUIP] Pickaxe' 67
-                    dress 'pick'
-                    wait 1000
-                else
-                    overhead '[ERR] Nemas nastroj!' 33
-                    stop
-                endif
-            endif
-            dclick 'right'
-            wft 5000
-            wait 200
-            targetrelloc 0 2
-        endif
-    elseif inlist 'smer' 'W'
-        if findtype 'shovel' backpack as 'shov'
-            dclick 'shov'
-            wft 5000
-            wait 200
-            targetrelloc 0 2
-        else
-            if rhandempty
-                if findtype 'pickaxe' backpack as 'pick'
-                    overhead '[EQUIP] Pickaxe' 67
-                    dress 'pick'
-                    wait 1000
-                else
-                    overhead '[ERR] Nemas nastroj!' 33
-                    stop
-                endif
-            endif
-            dclick 'right'
-            wft 5000
-            wait 200
-            targetrelloc 0 2
-        endif
+    if findtype 'shovel' backpack as 'shov'
+        dclick 'shov'
+    else
+        dclick 'right'
+    endif
+    wft 5000
+    wait 200
+    if inlist 'smer' 'N' or inlist 'smer' 'S'
+        targetrelloc 2 0
+    else
+        targetrelloc 0 2
     endif
     settimer 'digTimer' 0
     while timer 'digTimer' < 3000 and not insysmsg 'no metal' and not insysmsg 'There is no metal' and not insysmsg 'no more ore' and not insysmsg 'worn out' and not insysmsg 'too far' and not dead
