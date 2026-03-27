@@ -4,5 +4,5 @@
 # Povol skripty, makra a dokumentaci
 !Scripts/
 !Scripts/**
-!*.md
+!README.md
 !.gitignore
