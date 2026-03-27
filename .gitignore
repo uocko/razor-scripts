@@ -1,0 +1,11 @@
+# Ignoruj vše
+*
+
+# Povol skripty, makra a dokumentaci
+!Scripts/
+!Scripts/**
+!*.md
+!.gitignore
+
+# Lokalni reference - nepatri do repa
+RazorEnhanced_Scripting_Reference.md
