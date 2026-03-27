@@ -1,0 +1,493 @@
+#  ██╗   ██╗  ██████╗   ██████╗ ██╗  ██╗ ██████╗
+#  ██║   ██║ ██╔═══██╗ ██╔════╝ ██║ ██╔╝██╔═══██╗
+#  ██║   ██║ ██║   ██║ ██║      █████╔╝ ██║   ██║
+#  ██║   ██║ ██║   ██║ ██║      ██╔═██╗ ██║   ██║
+#  ╚██████╔╝ ╚██████╔╝ ╚██████╗ ██║  ██╗╚██████╔╝
+#   ╚═════╝   ╚═════╝   ╚═════╝ ╚═╝  ╚═╝ ╚═════╝  .cz
+#  ⚒ Oficialni skripty pro Razor Community Edition ⚒
+#  https://github.com/uocko/razor-scripts
+#
+# =============================================
+# LUMBERJACKING SKRIPT - Razor CE v1
+# =============================================
+# 1) Kaci stromy v 3x3 kolem (8 pozic, skip stred)
+# 2) Kazdy strom vytezi do konce (multi-swing)
+# 3) Haze logy na zem pred sebe
+# 4) Popojdi o 2 kroky diagonalne
+# 5) Merge + tahni logy
+# 6) Opakuj
+#
+# NASTAVENI - ZMEN TADY:
+# =============================================
+
+# >>> SMER CHUZE: NE / NW / SE / SW <<<
+if not listexists 'smer'
+    createlist 'smer'
+endif
+clearlist 'smer'
+pushlist 'smer' 'NE'
+
+# =============================================
+
+overhead '[INIT] Lumberjacking start' 67
+clearsysmsg
+clearignore
+cleardragdrop
+createtimer 'chopTimer'
+
+while not dead
+
+    # === MONSTER CHECK ===
+    # Zkontroluj nepratele v dosahu 8 tiles pred kazdym krokem
+    # POZNAMKA: syntax findtype pro mobily nutno overit na serveru
+    if findtype 'mobile' ground 8 as 'enemy'
+        if not friend 'enemy'
+            overhead '[DANGER] Nepritel v dosahu, cekam...' 33
+            sound 523
+            while findtype 'mobile' ground 8 as 'enemy' and not friend 'enemy' and not dead
+                wait 1000
+            endwhile
+        endif
+    endif
+
+    # === WEIGHT CHECK ===
+    if weight >= maxweight - 20
+        overhead '[WEIGHT] Prilis tezky, vysypavam...' 33
+        while findtype '7133' backpack as 'blog'
+            lift 'blog' 60000
+            if inlist 'smer' 'NE'
+                droprelloc 1 -1
+            elseif inlist 'smer' 'NW'
+                droprelloc -1 -1
+            elseif inlist 'smer' 'SE'
+                droprelloc 1 1
+            elseif inlist 'smer' 'SW'
+                droprelloc -1 1
+            endif
+            wait 200
+        endwhile
+        while findtype '7136' backpack as 'blog'
+            lift 'blog' 60000
+            if inlist 'smer' 'NE'
+                droprelloc 1 -1
+            elseif inlist 'smer' 'NW'
+                droprelloc -1 -1
+            elseif inlist 'smer' 'SE'
+                droprelloc 1 1
+            elseif inlist 'smer' 'SW'
+                droprelloc -1 1
+            endif
+            wait 200
+        endwhile
+    endif
+
+    # === NASTROJ CHECK ===
+    if not findtype 'hatchet' backpack
+        if rhandempty
+            if findtype 'axe' backpack as 'axe'
+                overhead '[EQUIP] Equip axe' 67
+                dress 'axe'
+                wait 1000
+            else
+                overhead '[ERR] Nemas nastroj!' 33
+                stop
+            endif
+        endif
+    endif
+
+    # === KACENI 3x3 (bez stredu) ===
+    # Pozice:
+    # (-1,-1)  (0,-1)  (1,-1)
+    # (-1, 0)  [CTR]   (1, 0)
+    # (-1, 1)  (0, 1)  (1, 1)
+
+    # --- Strom 1/8: (-1,-1) ---
+    overhead '[CHOP 1/8]' 67
+    if findtype 'hatchet' backpack as 'hatch'
+        dclick 'hatch'
+    else
+        dclick 'right'
+    endif
+    wft 5000
+    wait 200
+    targetrelloc -1 -1
+    settimer 'chopTimer' 0
+    while timer 'chopTimer' < 6000 and not insysmsg 'put some logs' and not insysmsg 'hack at' and not insysmsg 'not enough wood' and not insysmsg 'There is not' and not insysmsg 'can' and not insysmsg 'too far' and not dead
+        wait 300
+    endwhile
+    if not insysmsg 'can' and not insysmsg 'too far' and not insysmsg 'not enough wood' and not insysmsg 'There is not'
+        settimer 'chopTimer' 0
+        while timer 'chopTimer' < 30000 and not insysmsg 'not enough wood' and not insysmsg 'There is not' and not dead
+            if insysmsg 'put some logs' or insysmsg 'hack at'
+                settimer 'chopTimer' 0
+                clearsysmsg
+                if findtype 'hatchet' backpack as 'hatch'
+                    dclick 'hatch'
+                else
+                    dclick 'right'
+                endif
+                wft 5000
+                wait 200
+                target 'last'
+            endif
+            wait 300
+        endwhile
+    endif
+    clearsysmsg
+    cleardragdrop
+
+    # --- Strom 2/8: (0,-1) ---
+    overhead '[CHOP 2/8]' 67
+    if findtype 'hatchet' backpack as 'hatch'
+        dclick 'hatch'
+    else
+        dclick 'right'
+    endif
+    wft 5000
+    wait 200
+    targetrelloc 0 -1
+    settimer 'chopTimer' 0
+    while timer 'chopTimer' < 6000 and not insysmsg 'put some logs' and not insysmsg 'hack at' and not insysmsg 'not enough wood' and not insysmsg 'There is not' and not insysmsg 'can' and not insysmsg 'too far' and not dead
+        wait 300
+    endwhile
+    if not insysmsg 'can' and not insysmsg 'too far' and not insysmsg 'not enough wood' and not insysmsg 'There is not'
+        settimer 'chopTimer' 0
+        while timer 'chopTimer' < 30000 and not insysmsg 'not enough wood' and not insysmsg 'There is not' and not dead
+            if insysmsg 'put some logs' or insysmsg 'hack at'
+                settimer 'chopTimer' 0
+                clearsysmsg
+                if findtype 'hatchet' backpack as 'hatch'
+                    dclick 'hatch'
+                else
+                    dclick 'right'
+                endif
+                wft 5000
+                wait 200
+                target 'last'
+            endif
+            wait 300
+        endwhile
+    endif
+    clearsysmsg
+    cleardragdrop
+
+    # --- Strom 3/8: (1,-1) ---
+    overhead '[CHOP 3/8]' 67
+    if findtype 'hatchet' backpack as 'hatch'
+        dclick 'hatch'
+    else
+        dclick 'right'
+    endif
+    wft 5000
+    wait 200
+    targetrelloc 1 -1
+    settimer 'chopTimer' 0
+    while timer 'chopTimer' < 6000 and not insysmsg 'put some logs' and not insysmsg 'hack at' and not insysmsg 'not enough wood' and not insysmsg 'There is not' and not insysmsg 'can' and not insysmsg 'too far' and not dead
+        wait 300
+    endwhile
+    if not insysmsg 'can' and not insysmsg 'too far' and not insysmsg 'not enough wood' and not insysmsg 'There is not'
+        settimer 'chopTimer' 0
+        while timer 'chopTimer' < 30000 and not insysmsg 'not enough wood' and not insysmsg 'There is not' and not dead
+            if insysmsg 'put some logs' or insysmsg 'hack at'
+                settimer 'chopTimer' 0
+                clearsysmsg
+                if findtype 'hatchet' backpack as 'hatch'
+                    dclick 'hatch'
+                else
+                    dclick 'right'
+                endif
+                wft 5000
+                wait 200
+                target 'last'
+            endif
+            wait 300
+        endwhile
+    endif
+    clearsysmsg
+    cleardragdrop
+
+    # --- Strom 4/8: (-1,0) ---
+    overhead '[CHOP 4/8]' 67
+    if findtype 'hatchet' backpack as 'hatch'
+        dclick 'hatch'
+    else
+        dclick 'right'
+    endif
+    wft 5000
+    wait 200
+    targetrelloc -1 0
+    settimer 'chopTimer' 0
+    while timer 'chopTimer' < 6000 and not insysmsg 'put some logs' and not insysmsg 'hack at' and not insysmsg 'not enough wood' and not insysmsg 'There is not' and not insysmsg 'can' and not insysmsg 'too far' and not dead
+        wait 300
+    endwhile
+    if not insysmsg 'can' and not insysmsg 'too far' and not insysmsg 'not enough wood' and not insysmsg 'There is not'
+        settimer 'chopTimer' 0
+        while timer 'chopTimer' < 30000 and not insysmsg 'not enough wood' and not insysmsg 'There is not' and not dead
+            if insysmsg 'put some logs' or insysmsg 'hack at'
+                settimer 'chopTimer' 0
+                clearsysmsg
+                if findtype 'hatchet' backpack as 'hatch'
+                    dclick 'hatch'
+                else
+                    dclick 'right'
+                endif
+                wft 5000
+                wait 200
+                target 'last'
+            endif
+            wait 300
+        endwhile
+    endif
+    clearsysmsg
+    cleardragdrop
+
+    # --- Strom 5/8: (1,0) ---
+    overhead '[CHOP 5/8]' 67
+    if findtype 'hatchet' backpack as 'hatch'
+        dclick 'hatch'
+    else
+        dclick 'right'
+    endif
+    wft 5000
+    wait 200
+    targetrelloc 1 0
+    settimer 'chopTimer' 0
+    while timer 'chopTimer' < 6000 and not insysmsg 'put some logs' and not insysmsg 'hack at' and not insysmsg 'not enough wood' and not insysmsg 'There is not' and not insysmsg 'can' and not insysmsg 'too far' and not dead
+        wait 300
+    endwhile
+    if not insysmsg 'can' and not insysmsg 'too far' and not insysmsg 'not enough wood' and not insysmsg 'There is not'
+        settimer 'chopTimer' 0
+        while timer 'chopTimer' < 30000 and not insysmsg 'not enough wood' and not insysmsg 'There is not' and not dead
+            if insysmsg 'put some logs' or insysmsg 'hack at'
+                settimer 'chopTimer' 0
+                clearsysmsg
+                if findtype 'hatchet' backpack as 'hatch'
+                    dclick 'hatch'
+                else
+                    dclick 'right'
+                endif
+                wft 5000
+                wait 200
+                target 'last'
+            endif
+            wait 300
+        endwhile
+    endif
+    clearsysmsg
+    cleardragdrop
+
+    # --- Strom 6/8: (-1,1) ---
+    overhead '[CHOP 6/8]' 67
+    if findtype 'hatchet' backpack as 'hatch'
+        dclick 'hatch'
+    else
+        dclick 'right'
+    endif
+    wft 5000
+    wait 200
+    targetrelloc -1 1
+    settimer 'chopTimer' 0
+    while timer 'chopTimer' < 6000 and not insysmsg 'put some logs' and not insysmsg 'hack at' and not insysmsg 'not enough wood' and not insysmsg 'There is not' and not insysmsg 'can' and not insysmsg 'too far' and not dead
+        wait 300
+    endwhile
+    if not insysmsg 'can' and not insysmsg 'too far' and not insysmsg 'not enough wood' and not insysmsg 'There is not'
+        settimer 'chopTimer' 0
+        while timer 'chopTimer' < 30000 and not insysmsg 'not enough wood' and not insysmsg 'There is not' and not dead
+            if insysmsg 'put some logs' or insysmsg 'hack at'
+                settimer 'chopTimer' 0
+                clearsysmsg
+                if findtype 'hatchet' backpack as 'hatch'
+                    dclick 'hatch'
+                else
+                    dclick 'right'
+                endif
+                wft 5000
+                wait 200
+                target 'last'
+            endif
+            wait 300
+        endwhile
+    endif
+    clearsysmsg
+    cleardragdrop
+
+    # --- Strom 7/8: (0,1) ---
+    overhead '[CHOP 7/8]' 67
+    if findtype 'hatchet' backpack as 'hatch'
+        dclick 'hatch'
+    else
+        dclick 'right'
+    endif
+    wft 5000
+    wait 200
+    targetrelloc 0 1
+    settimer 'chopTimer' 0
+    while timer 'chopTimer' < 6000 and not insysmsg 'put some logs' and not insysmsg 'hack at' and not insysmsg 'not enough wood' and not insysmsg 'There is not' and not insysmsg 'can' and not insysmsg 'too far' and not dead
+        wait 300
+    endwhile
+    if not insysmsg 'can' and not insysmsg 'too far' and not insysmsg 'not enough wood' and not insysmsg 'There is not'
+        settimer 'chopTimer' 0
+        while timer 'chopTimer' < 30000 and not insysmsg 'not enough wood' and not insysmsg 'There is not' and not dead
+            if insysmsg 'put some logs' or insysmsg 'hack at'
+                settimer 'chopTimer' 0
+                clearsysmsg
+                if findtype 'hatchet' backpack as 'hatch'
+                    dclick 'hatch'
+                else
+                    dclick 'right'
+                endif
+                wft 5000
+                wait 200
+                target 'last'
+            endif
+            wait 300
+        endwhile
+    endif
+    clearsysmsg
+    cleardragdrop
+
+    # --- Strom 8/8: (1,1) ---
+    overhead '[CHOP 8/8]' 67
+    if findtype 'hatchet' backpack as 'hatch'
+        dclick 'hatch'
+    else
+        dclick 'right'
+    endif
+    wft 5000
+    wait 200
+    targetrelloc 1 1
+    settimer 'chopTimer' 0
+    while timer 'chopTimer' < 6000 and not insysmsg 'put some logs' and not insysmsg 'hack at' and not insysmsg 'not enough wood' and not insysmsg 'There is not' and not insysmsg 'can' and not insysmsg 'too far' and not dead
+        wait 300
+    endwhile
+    if not insysmsg 'can' and not insysmsg 'too far' and not insysmsg 'not enough wood' and not insysmsg 'There is not'
+        settimer 'chopTimer' 0
+        while timer 'chopTimer' < 30000 and not insysmsg 'not enough wood' and not insysmsg 'There is not' and not dead
+            if insysmsg 'put some logs' or insysmsg 'hack at'
+                settimer 'chopTimer' 0
+                clearsysmsg
+                if findtype 'hatchet' backpack as 'hatch'
+                    dclick 'hatch'
+                else
+                    dclick 'right'
+                endif
+                wft 5000
+                wait 200
+                target 'last'
+            endif
+            wait 300
+        endwhile
+    endif
+    clearsysmsg
+    cleardragdrop
+
+    overhead '[CHOP] Oblast vytezena' 66
+
+    # === 2) DROP LOGU Z BATOHU PRED SEBE ===
+    overhead '[DROP] Vysypavam batoh...' 66
+    while findtype '7133' backpack as 'blog'
+        lift 'blog' 60000
+        if inlist 'smer' 'NE'
+            droprelloc 1 -1
+        elseif inlist 'smer' 'NW'
+            droprelloc -1 -1
+        elseif inlist 'smer' 'SE'
+            droprelloc 1 1
+        elseif inlist 'smer' 'SW'
+            droprelloc -1 1
+        endif
+        wait 200
+    endwhile
+    while findtype '7136' backpack as 'blog'
+        lift 'blog' 60000
+        if inlist 'smer' 'NE'
+            droprelloc 1 -1
+        elseif inlist 'smer' 'NW'
+            droprelloc -1 -1
+        elseif inlist 'smer' 'SE'
+            droprelloc 1 1
+        elseif inlist 'smer' 'SW'
+            droprelloc -1 1
+        endif
+        wait 200
+    endwhile
+
+    # === 3) POPOJDI 2 KROKY DIAGONALNE ===
+    if inlist 'smer' 'NE'
+        overhead '[MOVE] Popochazim NE' 67
+        walk 'North East'
+        wait 400
+        walk 'North East'
+    elseif inlist 'smer' 'NW'
+        overhead '[MOVE] Popochazim NW' 67
+        walk 'North West'
+        wait 400
+        walk 'North West'
+    elseif inlist 'smer' 'SE'
+        overhead '[MOVE] Popochazim SE' 67
+        walk 'South East'
+        wait 400
+        walk 'South East'
+    elseif inlist 'smer' 'SW'
+        overhead '[MOVE] Popochazim SW' 67
+        walk 'South West'
+        wait 400
+        walk 'South West'
+    else
+        overhead '[ERR] Neznamy smer!' 33
+        stop
+    endif
+    wait 400
+
+    # === 4) MERGE NA BASE STACK + POSUN PRED SEBE ===
+    overhead '[DRAG] Merguju a taham logy...' 67
+    clearignore
+
+    if findtype '7133' true as 'base7133'
+        ignore 'base7133'
+        while findtype '7133' true as 'log'
+            lift 'log' 60000
+            drop 'base7133' 0 0 0
+            wait 200
+            ignore 'log'
+        endwhile
+        clearignore
+        lift 'base7133' 60000
+        if inlist 'smer' 'NE'
+            droprelloc 1 -1
+        elseif inlist 'smer' 'NW'
+            droprelloc -1 -1
+        elseif inlist 'smer' 'SE'
+            droprelloc 1 1
+        elseif inlist 'smer' 'SW'
+            droprelloc -1 1
+        endif
+        wait 200
+    endif
+
+    if findtype '7136' true as 'base7136'
+        ignore 'base7136'
+        while findtype '7136' true as 'log'
+            lift 'log' 60000
+            drop 'base7136' 0 0 0
+            wait 200
+            ignore 'log'
+        endwhile
+        clearignore
+        lift 'base7136' 60000
+        if inlist 'smer' 'NE'
+            droprelloc 1 -1
+        elseif inlist 'smer' 'NW'
+            droprelloc -1 -1
+        elseif inlist 'smer' 'SE'
+            droprelloc 1 1
+        elseif inlist 'smer' 'SW'
+            droprelloc -1 1
+        endif
+        wait 200
+    endif
+
+    clearignore
+    overhead '[OK] Dalsi oblast' 66
+    clearsysmsg
+endwhile
